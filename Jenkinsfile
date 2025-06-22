@@ -1,17 +1,24 @@
-
 pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                bat './mvnw.cmd clean package'
+                bat 'docker build -t springboot-app .'
             }
         }
 
-        stage('Run') {
+        stage('Remove Existing Container') {
             steps {
-                bat 'docker build -t springboot-app .'
+                bat '''
+                    docker stop springboot-app || exit 0
+                    docker rm springboot-app || exit 0
+                '''
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
                 bat 'docker run -d -p 8082:8081 --name springboot-app springboot-app'
             }
         }

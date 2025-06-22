@@ -2,17 +2,23 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/vitsjumbad/java-devops.git'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t springboot-app .'
             }
         }
 
-        stage('Remove Existing Container') {
+        stage('Stop & Remove Existing Container') {
             steps {
                 bat '''
-                    docker stop springboot-app || exit 0
-                    docker rm springboot-app || exit 0
+                docker stop springboot-app || exit 0
+                docker rm springboot-app || exit 0
                 '''
             }
         }
@@ -24,4 +30,3 @@ pipeline {
         }
     }
 }
-

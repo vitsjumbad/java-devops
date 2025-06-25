@@ -1,7 +1,17 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven_3'
+    }
+
     stages {
+        stage('Build Java App') {
+            steps {
+                bat 'mvn clean package'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t springboot-app .'
